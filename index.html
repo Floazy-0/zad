@@ -91,6 +91,34 @@
             transition: transform 0.2s ease;
         }
 
+        /* City Selector Styling */
+        .city-selector-container {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .city-selector {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            padding: 10px 15px;
+            color: white;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 16px;
+            flex-grow: 1;
+            outline: none;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23d4af37' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: left 15px center;
+            background-size: 18px;
+            padding-left: 45px;
+        }
+
         /* Prayer Times */
         .prayer-grid {
             display: grid;
@@ -116,6 +144,12 @@
             color: var(--gold);
             font-weight: 700;
             font-size: 18px;
+        }
+
+        .prayer-ampm {
+            font-size: 12px;
+            margin-right: 2px;
+            color: var(--text-secondary);
         }
 
         .prayer-item.active {
@@ -414,7 +448,16 @@
         <!-- Prayer Times -->
         <section id="prayer-section" class="active">
             <div class="glass-card">
-                <h3 style="margin-top:0; color: var(--gold);">مواقيت الصلاة - حفر الباطن</h3>
+                <div class="city-selector-container">
+                    <select id="city-select" class="city-selector" onchange="fetchPrayerTimes()">
+                        <option value="Hafar Al Batin" selected>حفر الباطن</option>
+                        <option value="Riyadh">الرياض</option>
+                        <option value="Mecca">مكة المكرمة</option>
+                        <option value="Medina">المدينة المنورة</option>
+                        <option value="Jeddah">جدة</option>
+                        <option value="Dammam">الدمام</option>
+                    </select>
+                </div>
                 <div class="prayer-grid" id="prayer-times">
                     <div class="prayer-item" id="p-Fajr"><div class="prayer-name">الفجر</div><div class="prayer-time">--:--</div></div>
                     <div class="prayer-item" id="p-Dhuhr"><div class="prayer-name">الظهر</div><div class="prayer-time">--:--</div></div>
@@ -517,15 +560,26 @@
         }
 
         // --- Prayer Times ---
+        function format12Hour(timeStr) {
+            if (!timeStr) return "--:--";
+            let [hours, minutes] = timeStr.split(':');
+            hours = parseInt(hours);
+            const ampm = hours >= 12 ? 'م' : 'ص';
+            hours = hours % 12;
+            hours = hours ? hours : 12; // the hour '0' should be '12'
+            return `${hours}:${minutes} <span class="prayer-ampm">${ampm}</span>`;
+        }
+
         async function fetchPrayerTimes() {
+            const city = document.getElementById('city-select').value;
             try {
-                const res = await fetch('https://api.aladhan.com/v1/timingsByCity?city=Hafar%20Al%20Batin&country=Saudi%20Arabia&method=4');
+                const res = await fetch(`https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(city)}&country=Saudi%20Arabia&method=4`);
                 const data = await res.json();
                 const timings = data.data.timings;
                 const prayers = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
                 prayers.forEach(p => {
                     const el = document.querySelector(`#p-${p} .prayer-time`);
-                    if(el) el.innerText = timings[p];
+                    if(el) el.innerHTML = format12Hour(timings[p]);
                 });
             } catch (e) { console.error(e); }
         }
