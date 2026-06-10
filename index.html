@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#080808">
+    <title>زاد | Zad</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #080808;
+            --glass-bg: rgba(25, 25, 25, 0.6);
+            --gold: #d4af37;
+            --gold-glow: #ffcc33;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --safe-top: env(safe-area-inset-top);
+            --safe-bottom: env(safe-area-inset-bottom);
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            user-select: none;
+        }
+
+        .background-glow {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at center, rgba(212, 175, 55, 0.05) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        header {
+            padding: calc(var(--safe-top) + 20px) 20px 20px;
+            text-align: center;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 0.5px solid rgba(212, 175, 55, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--gold);
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+        }
+
+        .container {
+            padding: 20px;
+            padding-bottom: calc(var(--safe-bottom) + 100px);
+        }
+
+        /* Glass Cards */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 0.5px solid rgba(212, 175, 55, 0.15);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+            transition: transform 0.2s ease;
+        }
+
+        /* Prayer Times Grid */
+        .prayer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 12px;
+        }
+
+        .prayer-item {
+            text-align: center;
+            padding: 15px 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            border: 0.5px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .prayer-name {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .prayer-time {
+            color: var(--gold);
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .prayer-item.active {
+            border-color: var(--gold);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+            background: rgba(212, 175, 55, 0.05);
+        }
+
+        /* Athkar Counter */
+        .athkar-card {
+            display: none;
+            text-align: center;
+        }
+
+        .athkar-card.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .athkar-text {
+            font-size: 20px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .counter-btn {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            border: 2px solid var(--gold);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            cursor: pointer;
+            position: relative;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+            transition: all 0.1s active;
+        }
+
+        .counter-btn:active {
+            transform: scale(0.92);
+            box-shadow: 0 0 30px var(--gold-glow);
+        }
+
+        .counter-val {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .counter-target {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* Quran Reader */
+        .quran-container {
+            max-height: 500px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .ayah {
+            font-size: 22px;
+            line-height: 2;
+            text-align: justify;
+            margin-bottom: 15px;
+            border-bottom: 0.5px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 15px;
+        }
+
+        .focus-mode header, .focus-mode .tabs {
+            display: none;
+        }
+        
+        .focus-mode .container {
+            padding-top: calc(var(--safe-top) + 20px);
+        }
+
+        /* Tabs Navigation */
+        .tabs {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: calc(70px + var(--safe-bottom));
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-top: 0.5px solid rgba(212, 175, 55, 0.2);
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            padding-top: 10px;
+            z-index: 100;
+        }
+
+        .tab-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-secondary);
+            font-size: 12px;
+            text-decoration: none;
+            width: 25%;
+        }
+
+        .tab-item.active {
+            color: var(--gold);
+        }
+
+        .tab-icon {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 4px;
+            fill: currentColor;
+            filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0));
+        }
+
+        .active .tab-icon {
+            filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.5));
+        }
+
+        /* Section visibility */
+        section {
+            display: none;
+        }
+        section.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-glow"></div>
+    
+    <header>
+        <h1 id="header-title">زاد</h1>
+    </header>
+
+    <div class="container">
+        <!-- Prayer Times Section -->
+        <section id="prayer-section" class="active">
+            <div class="glass-card">
+                <h3 style="margin-top:0; color: var(--gold);">مواقيت الصلاة - حفر الباطن</h3>
+                <div class="prayer-grid" id="prayer-times">
+                    <div class="prayer-item" id="p-Fajr"><div class="prayer-name">الفجر</div><div class="prayer-time">--:--</div></div>
+                    <div class="prayer-item" id="p-Dhuhr"><div class="prayer-name">الظهر</div><div class="prayer-time">--:--</div></div>
+                    <div class="prayer-item" id="p-Asr"><div class="prayer-name">العصر</div><div class="prayer-time">--:--</div></div>
+                    <div class="prayer-item" id="p-Maghrib"><div class="prayer-name">المغرب</div><div class="prayer-time">--:--</div></div>
+                    <div class="prayer-item" id="p-Isha"><div class="prayer-name">العشاء</div><div class="prayer-time">--:--</div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Athkar Section -->
+        <section id="athkar-section">
+            <div class="glass-card">
+                <div id="athkar-container">
+                    <div class="athkar-card active">
+                        <div class="athkar-text" id="the-zekr">أصبحنا وأصبح الملك لله، والحمد لله، لا إله إلا الله وحده لا شريك له</div>
+                        <div class="counter-btn" onclick="incrementCounter()">
+                            <span class="counter-val" id="cnt">0</span>
+                            <span class="counter-target" id="target">/ 3</span>
+                        </div>
+                    </div>
+                </div>
+                <div style="display:flex; justify-content: space-between; margin-top: 20px;">
+                    <button onclick="prevZekr()" style="background:none; border: 1px solid var(--gold); color:var(--gold); border-radius:10px; padding: 5px 15px;">السابق</button>
+                    <button onclick="nextZekr()" style="background:none; border: 1px solid var(--gold); color:var(--gold); border-radius:10px; padding: 5px 15px;">التالي</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quran Section -->
+        <section id="quran-section">
+            <div class="glass-card">
+                <div style="display:flex; justify-content: space-between; align-items:center; margin-bottom:15px;">
+                    <h3 style="margin:0; color: var(--gold);">سورة الكهف</h3>
+                    <button onclick="toggleFocus()" style="background:var(--gold); border:none; border-radius:10px; padding: 5px 10px; font-weight:bold;">وضع التركيز</button>
+                </div>
+                <div class="quran-container">
+                    <div class="ayah">الْحَمْدُ لِلَّهِ الَّذِي أَنزَلَ عَلَىٰ عَبْدِهِ الْكِتَابَ وَلَمْ يَجْعَل لَّهُ عِوَجًا ۜ (1)</div>
+                    <div class="ayah">قَيِّمًا لِّيُنذِرَ بَأْسًا شَدِيدًا مِّن لَّدُنْهُ وَيُبَشِّرَ الْمُؤْمِنِينَ الَّذِينَ يَعْمَلُونَ الصَّالِحَاتِ أَنَّ لَهُمْ أَجْرًا حَسَنًا (2)</div>
+                    <div class="ayah">مَّاكِثِينَ فِيهِ أَبَدًا (3)</div>
+                    <div class="ayah">وَيُنذِرَ الَّذِينَ قَالُوا اتَّخَذَ اللَّهُ وَلَدًا (4)</div>
+                    <div class="ayah">مَّا لَهُم بِهِ مِنْ عِلْمٍ وَلَا لِآبَائِهِمْ ۚ كَبُرَتْ كَلِمَةً تَخْرُجُ مِنْ أَفْوَاهِهِمْ ۚ إِن يَقُولُونَ إِلَّا كَذِبًا (5)</div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <nav class="tabs">
+        <a href="javascript:void(0)" class="tab-item active" onclick="showSection('prayer', this)">
+            <svg class="tab-icon" viewBox="0 0 24 24"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/></svg>
+            <span>الصلاة</span>
+        </a>
+        <a href="javascript:void(0)" class="tab-item" onclick="showSection('athkar', this)">
+            <svg class="tab-icon" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+            <span>الأذكار</span>
+        </a>
+        <a href="javascript:void(0)" class="tab-item" onclick="showSection('quran', this)">
+            <svg class="tab-icon" viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>
+            <span>المصحف</span>
+        </a>
+    </nav>
+
+    <script>
+        // State
+        let currentZekrIndex = 0;
+        let counter = 0;
+        const athkar = [
+            { text: "أصبحنا وأصبح الملك لله، والحمد لله، لا إله إلا الله وحده لا شريك له", target: 1 },
+            { text: "اللهم بك أصبحنا، وبك أمسينا، وبك نحيا، وبك نموت، وإليك النشور", target: 1 },
+            { text: "سُبْحَانَ اللهِ وَبِحَمْدِهِ", target: 100 },
+            { text: "أستغفر الله وأتوب إليه", target: 70 }
+        ];
+
+        // Tabs logic
+        function showSection(id, el) {
+            document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+            document.getElementById(id + '-section').classList.add('active');
+            el.classList.add('active');
+            
+            if(id === 'quran') {
+                document.body.classList.remove('focus-mode');
+            }
+        }
+
+        // Counter logic
+        function incrementCounter() {
+            counter++;
+            const zekr = athkar[currentZekrIndex];
+            if (counter >= zekr.target) {
+                // Visual feedback for completion
+                const btn = document.querySelector('.counter-btn');
+                btn.style.borderColor = '#00ff00';
+                setTimeout(() => btn.style.borderColor = 'var(--gold)', 500);
+                if (window.navigator.vibrate) window.navigator.vibrate(50);
+            }
+            updateCounterUI();
+        }
+
+        function updateCounterUI() {
+            document.getElementById('cnt').innerText = counter;
+            document.getElementById('target').innerText = '/ ' + athkar[currentZekrIndex].target;
+            document.getElementById('the-zekr').innerText = athkar[currentZekrIndex].text;
+        }
+
+        function nextZekr() {
+            currentZekrIndex = (currentZekrIndex + 1) % athkar.length;
+            counter = 0;
+            updateCounterUI();
+        }
+
+        function prevZekr() {
+            currentZekrIndex = (currentZekrIndex - 1 + athkar.length) % athkar.length;
+            counter = 0;
+            updateCounterUI();
+        }
+
+        // Focus Mode
+        function toggleFocus() {
+            document.body.classList.toggle('focus-mode');
+        }
+
+        // Prayer Times API
+        async function fetchPrayerTimes() {
+            try {
+                // Using Hafar Al-Batin coordinates (28.4328, 45.9708) and Umm Al-Qura (4)
+                const res = await fetch('https://api.aladhan.com/v1/timingsByCity?city=Hafar%20Al%20Batin&country=Saudi%20Arabia&method=4');
+                const data = await res.json();
+                const timings = data.data.timings;
+                
+                const prayers = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+                prayers.forEach(p => {
+                    document.querySelector(`#p-${p} .prayer-time`).innerText = timings[p];
+                });
+
+                // Highlight next prayer (simplified)
+                const now = new Date();
+                const currentTime = now.getHours() * 60 + now.getMinutes();
+                let found = false;
+                for (let p of prayers) {
+                    const [h, m] = timings[p].split(':').map(Number);
+                    if (h * 60 + m > currentTime && !found) {
+                        document.getElementById('p-'+p).classList.add('active');
+                        found = true;
+                    }
+                }
+            } catch (e) {
+                console.error("Failed to load prayer times", e);
+            }
+        }
+
+        // Init
+        fetchPrayerTimes();
+        updateCounterUI();
+
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+    </script>
+</body>
+</html>
