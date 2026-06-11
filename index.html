@@ -9,304 +9,172 @@
     <title>زاد | Zad</title>
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icons/icon-192.png">
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Tajawal:wght@300;400;500;700&family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #050505;
-            --glass-bg: rgba(15, 15, 15, 0.7);
+            --glass-bg: rgba(15, 15, 15, 0.75);
             --gold-primary: #C5A059;
             --gold-secondary: #9A7B43;
             --gold-gradient: linear-gradient(135deg, #C5A059 0%, #9A7B43 100%);
-            --gold-glow: rgba(197, 160, 89, 0.3);
             --text-primary: #ffffff;
             --text-secondary: #b0b0b0;
             --safe-top: env(safe-area-inset-top);
             --safe-bottom: env(safe-area-inset-bottom);
         }
 
-        * {
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-            -webkit-font-smoothing: antialiased;
-        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
-            margin: 0;
-            padding: 0;
+            margin: 0; padding: 0;
             font-family: 'Tajawal', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-primary);
             overflow-x: hidden;
             user-select: none;
-            min-height: 100vh;
+            transition: background 0.5s ease;
         }
 
-        .background-aura {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background: 
-                radial-gradient(circle at 0% 0%, rgba(197, 160, 89, 0.08) 0%, transparent 50%),
-                radial-gradient(circle at 100% 100%, rgba(154, 123, 67, 0.08) 0%, transparent 50%);
-            z-index: -1;
-            pointer-events: none;
+        .luxury-aura {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: radial-gradient(circle at 50% -20%, rgba(197, 160, 89, 0.08) 0%, transparent 70%),
+                        radial-gradient(circle at 0% 100%, rgba(154, 123, 67, 0.05) 0%, transparent 50%);
+            z-index: -1; pointer-events: none;
         }
 
         header {
-            padding: calc(var(--safe-top) + 25px) 20px 25px;
+            padding: calc(var(--safe-top) + 20px) 20px 20px;
             text-align: center;
-            background: rgba(5, 5, 5, 0.8);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
             border-bottom: 1px solid rgba(197, 160, 89, 0.15);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+            position: sticky; top: 0; z-index: 100;
         }
 
-        header h1 {
-            margin: 0;
-            font-family: 'Amiri', serif;
-            font-size: 36px;
-            font-weight: 700;
+        h1 {
+            margin: 0; font-size: 32px; font-weight: 700;
             background: var(--gold-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 8px rgba(197, 160, 89, 0.4));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-shadow: 0 4px 15px rgba(197, 160, 89, 0.2);
         }
 
-        .container {
-            padding: 24px 20px;
-            padding-bottom: calc(var(--safe-bottom) + 120px);
-            max-width: 600px;
-            margin: 0 auto;
-        }
+        .container { padding: 20px; padding-bottom: calc(var(--safe-bottom) + 110px); }
 
         .glass-card {
             background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(197, 160, 89, 0.12);
-            border-radius: 28px;
-            padding: 24px;
-            margin-bottom: 24px;
+            border-radius: 24px;
+            padding: 24px; margin-bottom: 24px;
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
-            transition: transform 0.3s ease, border-color 0.3s ease;
+            transition: transform 0.3s ease, opacity 0.3s ease;
         }
 
-        .city-selector {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(197, 160, 89, 0.2);
-            border-radius: 16px;
-            padding: 14px 20px;
-            color: var(--text-primary);
-            font-family: 'Tajawal', sans-serif;
-            font-size: 17px;
-            width: 100%;
-            outline: none;
-            appearance: none;
-            -webkit-appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23C5A059' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: left 15px center;
-            background-size: 18px;
-            padding-left: 45px;
-            transition: all 0.3s ease;
-        }
-
-        .city-selector:focus {
-            border-color: var(--gold-primary);
-            box-shadow: 0 0 15px var(--gold-glow);
-        }
-
-        .prayer-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            gap: 14px;
-            margin-top: 20px;
-        }
-
+        /* Prayer Times Luxury Pulse */
         .prayer-item {
-            text-align: center;
-            padding: 18px 12px;
+            text-align: center; padding: 18px 10px;
             background: rgba(255, 255, 255, 0.02);
-            border-radius: 20px;
-            border: 1px solid rgba(197, 160, 89, 0.08);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-radius: 18px; border: 1px solid rgba(197, 160, 89, 0.08);
+            transition: all 0.4s ease;
         }
 
         .prayer-item.active {
-            background: rgba(197, 160, 89, 0.1);
-            border-color: var(--gold-primary);
-            box-shadow: 0 0 20px var(--gold-glow);
-            transform: scale(1.05);
-            animation: soft-pulse 2s infinite ease-in-out;
+            background: rgba(197, 160, 89, 0.05);
+            border: 1px solid var(--gold-primary);
+            box-shadow: 0 0 15px rgba(197, 160, 89, 0.2);
+            animation: pulse-gold 3s infinite ease-in-out;
         }
 
-        @keyframes soft-pulse {
-            0%, 100% { box-shadow: 0 0 15px var(--gold-glow); }
-            50% { box-shadow: 0 0 30px rgba(197, 160, 89, 0.5); }
+        @keyframes pulse-gold {
+            0% { box-shadow: 0 0 5px rgba(197, 160, 89, 0.1); }
+            50% { box-shadow: 0 0 20px rgba(197, 160, 89, 0.3); }
+            100% { box-shadow: 0 0 5px rgba(197, 160, 89, 0.1); }
         }
 
-        .prayer-name { color: var(--text-secondary); font-size: 15px; margin-bottom: 8px; font-weight: 500; }
-        .prayer-time { color: var(--gold-primary); font-weight: 700; font-size: 20px; }
-        .prayer-ampm { font-size: 13px; margin-right: 4px; color: var(--text-secondary); opacity: 0.8; }
-
-        .category-tabs {
-            display: flex;
-            overflow-x: auto;
-            gap: 12px;
-            margin-bottom: 24px;
-            padding: 4px;
-            scrollbar-width: none;
-        }
-        .category-tabs::-webkit-scrollbar { display: none; }
-
-        .cat-tab {
-            padding: 10px 20px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(197, 160, 89, 0.15);
-            border-radius: 25px;
-            color: var(--text-secondary);
-            white-space: nowrap;
-            font-size: 15px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .cat-tab.active {
-            background: var(--gold-gradient);
-            color: #000;
-            border-color: transparent;
-            font-weight: 700;
-            box-shadow: 0 4px 15px var(--gold-glow);
-        }
-
-        .athkar-text {
-            font-family: 'Amiri', serif;
-            font-size: 1.6rem;
-            line-height: 2.1;
-            margin-bottom: 35px;
-            min-height: 200px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        /* Quran Physical Look */
+        .surah-banner {
+            background: var(--glass-bg);
+            border: 2px solid var(--gold-primary);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0 40px;
             text-align: center;
-            padding: 0 10px;
-            color: var(--text-primary);
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .counter-container {
             position: relative;
-            width: 160px;
-            height: 160px;
-            margin: 0 auto;
-            cursor: pointer;
+            overflow: hidden;
+            box-shadow: inset 0 0 20px rgba(197, 160, 89, 0.1);
         }
 
-        .counter-svg { transform: rotate(-90deg); }
-        .counter-bg { fill: none; stroke: rgba(255,255,255,0.05); stroke-width: 8; }
-        .counter-progress {
-            fill: none; stroke: url(#gold-grad); stroke-width: 8;
-            stroke-linecap: round; transition: stroke-dashoffset 0.4s ease;
+        .surah-banner::before, .surah-banner::after {
+            content: "❖"; color: var(--gold-primary); position: absolute; top: 50%; transform: translateY(-50%); font-size: 20px;
+        }
+        .surah-banner::before { left: 20px; }
+        .surah-banner::after { right: 20px; }
+
+        .surah-title-gold {
+            font-family: 'Amiri', serif; font-size: 32px; font-weight: bold;
+            color: var(--gold-primary); text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
 
-        .counter-labels {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            pointer-events: none;
+        .quran-page {
+            font-family: 'Scheherazade New', serif;
+            font-size: 1.7rem; line-height: 2.3;
+            text-align: center; direction: rtl;
+            color: #fdf5e6; /* Cream color for readability */
+            font-variant-ligatures: normal;
+            font-feature-settings: "ss05" 1, "ss19" 1, "ss08" 1;
+            padding: 10px;
         }
 
-        .counter-val { font-size: 42px; font-weight: 700; color: var(--gold-primary); display: block; }
-        .counter-target { font-size: 14px; color: var(--text-secondary); opacity: 0.7; }
-
-        .surah-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 18px 24px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 20px;
-            border: 1px solid rgba(197, 160, 89, 0.1);
-            margin-bottom: 12px;
-            transition: all 0.3s ease;
+        .verse-num {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 45px; height: 45px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 5 L62 35 L95 35 L68 55 L78 88 L50 68 L22 88 L32 55 L5 35 L38 35 Z' fill='none' stroke='%23C5A059' stroke-width='4'/%3E%3C/svg%3E");
+            background-size: contain; background-repeat: no-repeat;
+            font-family: 'Tajawal', sans-serif; font-size: 14px; color: var(--gold-primary);
+            margin: 0 5px; vertical-align: middle; padding-top: 2px;
         }
-        .surah-item:active { transform: scale(0.98); background: rgba(197, 160, 89, 0.05); }
 
+        /* Athkar Counter */
+        .circle-container { position: relative; width: 180px; height: 180px; margin: 0 auto; cursor: pointer; }
+        .circle-progress { transform: rotate(-90deg); transform-origin: 50% 50%; }
+        .circle-bg { fill: none; stroke: rgba(197, 160, 89, 0.1); stroke-width: 6; }
+        .circle-bar { fill: none; stroke: var(--gold-primary); stroke-width: 6; stroke-linecap: round; transition: stroke-dashoffset 0.3s ease; }
+        .circle-text {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        /* Navigation */
         .tabs {
-            position: fixed;
-            bottom: 0; left: 0; right: 0;
-            height: calc(85px + var(--safe-bottom));
-            background: rgba(10, 10, 10, 0.85);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
+            position: fixed; bottom: 0; left: 0; right: 0;
+            height: calc(80px + var(--safe-bottom));
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
             border-top: 1px solid rgba(197, 160, 89, 0.2);
-            display: flex;
-            justify-content: space-around;
-            padding: 12px 0 calc(var(--safe-bottom) + 5px);
-            z-index: 2000;
+            display: flex; justify-content: space-around; padding-top: 12px; z-index: 100;
         }
 
         .tab-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: var(--text-secondary);
-            font-size: 13px;
-            text-decoration: none;
-            width: 25%;
+            display: flex; flex-direction: column; align-items: center;
+            color: var(--text-secondary); font-size: 11px; text-decoration: none; width: 25%;
             transition: all 0.3s ease;
         }
+        .tab-item.active { color: var(--gold-primary); transform: translateY(-2px); }
+        .tab-icon { width: 26px; height: 26px; margin-bottom: 6px; fill: currentColor; }
 
-        .tab-item.active { color: var(--gold-primary); font-weight: 600; }
-        .tab-icon { width: 28px; height: 28px; margin-bottom: 6px; fill: currentColor; transition: transform 0.3s ease; }
-        .tab-item.active .tab-icon { transform: translateY(-4px); filter: drop-shadow(0 0 5px var(--gold-glow)); }
+        section { display: none; animation: fadeIn 0.4s ease forwards; }
+        section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        section { display: none; opacity: 0; transform: translateY(10px); transition: all 0.4s ease; }
-        section.active { display: block; opacity: 1; transform: translateY(0); }
-
-        .quran-content {
-            font-family: 'Amiri', serif;
-            font-size: 1.8rem;
-            line-height: 2.2;
-            padding: 15px;
-            color: var(--text-primary);
+        .city-selector {
+            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(197, 160, 89, 0.25);
+            border-radius: 16px; padding: 14px 20px; color: white; font-family: 'Tajawal', sans-serif;
+            width: 100%; appearance: none; outline: none; margin-bottom: 20px;
         }
-
-        .ayah-num {
-            color: var(--gold-primary);
-            font-size: 18px;
-            margin: 0 8px;
-            font-family: 'Tajawal', sans-serif;
-            border: 1px solid var(--gold-glow);
-            border-radius: 50%;
-            width: 30px; height: 30px;
-            display: inline-flex; align-items: center; justify-content: center;
-        }
-
-        /* Settings Swatches */
-        .settings-item {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 18px 0; border-bottom: 1px solid rgba(197, 160, 89, 0.1);
-        }
-        .switch { position: relative; width: 50px; height: 28px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider {
-            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(255,255,255,0.08); transition: .4s; border-radius: 30px;
-        }
-        .slider:before {
-            position: absolute; content: ""; height: 22px; width: 22px; left: 3px; bottom: 3px;
-            background: var(--text-secondary); transition: .4s; border-radius: 50%;
-        }
-        input:checked + .slider { background: var(--gold-glow); }
-        input:checked + .slider:before { transform: translateX(22px); background: var(--gold-primary); }
     </style>
 </head>
-<body onclick="if(typeof exitFocusIfActive === 'function') exitFocusIfActive(event)">
-    <div class="background-aura"></div>
+<body onclick="if(window.navigator.vibrate) {}">
+    <div class="luxury-aura"></div>
     <header><h1>زاد</h1></header>
 
     <div class="container">
@@ -314,6 +182,13 @@
         <section id="prayer-section" class="active">
             <div class="glass-card">
                 <select id="city-select" class="city-selector" onchange="fetchPrayerTimes()">
+                    <optgroup label="المنطقة الشرقية">
+                        <option value="Hafar Al Batin" selected>حفر الباطن</option>
+                        <option value="Dammam">الدمام</option>
+                        <option value="Al-Khobar">الخبر</option>
+                        <option value="Hofuf">الهفوف</option>
+                        <option value="Jubail">الجبيل</option>
+                    </optgroup>
                     <optgroup label="المنطقة الوسطى">
                         <option value="Riyadh">الرياض</option>
                         <option value="Buraydah">بريدة</option>
@@ -321,40 +196,15 @@
                         <option value="Al-Zulfi">الزلفي</option>
                         <option value="Ar Rass">الرس</option>
                         <option value="Al Badai">البدائع</option>
-                        <option value="Al-Kharj">الخرج</option>
-                        <option value="Majmaah">المجمعة</option>
                     </optgroup>
                     <optgroup label="المنطقة الغربية">
                         <option value="Mecca">مكة المكرمة</option>
                         <option value="Medina">المدينة المنورة</option>
                         <option value="Jeddah">جدة</option>
                         <option value="Taif">الطائف</option>
-                        <option value="Yanbu">ينبع</option>
-                    </optgroup>
-                    <optgroup label="المنطقة الشرقية">
-                        <option value="Hafar Al Batin" selected>حفر الباطن</option>
-                        <option value="Dammam">الدمام</option>
-                        <option value="Al-Khobar">الخبر</option>
-                        <option value="Hofuf">الهفوف</option>
-                        <option value="Jubail">الجبيل</option>
-                        <option value="Qatif">القطيف</option>
-                    </optgroup>
-                    <optgroup label="المنطقة الشمالية">
-                        <option value="Tabuk">تبوك</option>
-                        <option value="Hail">حائل</option>
-                        <option value="Arar">عرعر</option>
-                        <option value="Sakaka">سكاكا</option>
-                        <option value="Al-Qurayyat">القريات</option>
-                    </optgroup>
-                    <optgroup label="المنطقة الجنوبية">
-                        <option value="Abha">أبها</option>
-                        <option value="Khamis Mushait">خميس مشيط</option>
-                        <option value="Najran">نجران</option>
-                        <option value="Jizan">جيزان</option>
-                        <option value="Al-Baha">الباحة</option>
                     </optgroup>
                 </select>
-                <div class="prayer-grid" id="prayer-times">
+                <div class="prayer-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;" id="prayer-times">
                     <div class="prayer-item" id="p-Fajr"><div class="prayer-name">الفجر</div><div class="prayer-time">--:--</div></div>
                     <div class="prayer-item" id="p-Dhuhr"><div class="prayer-name">الظهر</div><div class="prayer-time">--:--</div></div>
                     <div class="prayer-item" id="p-Asr"><div class="prayer-name">العصر</div><div class="prayer-time">--:--</div></div>
@@ -366,30 +216,24 @@
 
         <!-- Athkar -->
         <section id="athkar-section">
-            <div class="category-tabs" id="active-tabs"></div>
-            <div class="glass-card">
-                <div class="athkar-text" id="the-zekr">جاري التحميل...</div>
+            <div id="active-tabs" style="display:flex; gap:10px; overflow-x:auto; margin-bottom:20px; padding-bottom:5px;"></div>
+            <div class="glass-card" style="text-align:center;">
+                <div id="the-zekr" style="font-family:'Amiri', serif; font-size:1.6rem; line-height:2; margin-bottom:30px; min-height:180px;">جاري التحميل...</div>
                 
-                <div class="counter-container" onclick="incrementCounter()">
-                    <svg class="counter-svg" width="160" height="160">
-                        <defs>
-                            <linearGradient id="gold-grad" x1="0%" y1="0%" x2="100%" y2="0%">
-                                <stop offset="0%" style="stop-color:#C5A059;stop-opacity:1" />
-                                <stop offset="100%" style="stop-color:#9A7B43;stop-opacity:1" />
-                            </linearGradient>
-                        </defs>
-                        <circle class="counter-bg" cx="80" cy="80" r="70" />
-                        <circle class="counter-progress" id="progress-circle" cx="80" cy="80" r="70" stroke-dasharray="440" stroke-dashoffset="440" />
+                <div class="circle-container" onclick="incrementCounter()">
+                    <svg class="circle-progress" width="180" height="180">
+                        <circle class="circle-bg" cx="90" cy="90" r="80"></circle>
+                        <circle class="circle-bar" id="progress-bar" cx="90" cy="90" r="80" stroke-dasharray="502.6" stroke-dashoffset="502.6"></circle>
                     </svg>
-                    <div class="counter-labels">
-                        <span class="counter-val" id="cnt">0</span>
-                        <span class="counter-target" id="target">/ 0</span>
+                    <div class="circle-text">
+                        <span id="cnt" style="font-size:42px; font-weight:700; color:var(--gold-primary);">0</span>
+                        <span id="target" style="font-size:14px; color:var(--text-secondary);">/ 0</span>
                     </div>
                 </div>
 
                 <div style="display:flex; justify-content: space-between; margin-top: 40px;">
-                    <button onclick="prevZekr()" class="cat-tab">السابق</button>
-                    <button onclick="nextZekr()" class="cat-tab">التالي</button>
+                    <button onclick="prevZekr()" class="prayer-item" style="flex:1; margin-left:10px; padding:12px;">السابق</button>
+                    <button onclick="nextZekr()" class="prayer-item" style="flex:1; padding:12px;">التالي</button>
                 </div>
             </div>
         </section>
@@ -397,21 +241,24 @@
         <!-- Quran -->
         <section id="quran-section">
             <div id="quran-browser">
-                <div class="glass-card" style="padding: 15px;">
-                    <input type="text" class="city-selector" style="background-image:none; padding-left:20px;" placeholder="ابحث عن سورة..." oninput="filterSurahs(this.value)">
+                <div class="glass-card">
+                    <input type="text" style="width:100%; background:none; border:none; color:white; font-size:16px; outline:none;" placeholder="ابحث عن سورة..." oninput="filterSurahs(this.value)">
                 </div>
-                <div id="surah-list"></div>
+                <div id="surah-list" style="display:flex; flex-direction:column; gap:12px;"></div>
             </div>
-            <div id="quran-reader" style="display:none">
-                <button onclick="backToBrowser()" class="cat-tab" style="margin-bottom:20px">← رجوع</button>
-                <div class="glass-card" style="padding:10px;"><div id="quran-content" class="quran-content"></div></div>
+            <div id="quran-reader" style="display:none;">
+                <button onclick="backToBrowser()" style="background:none; border:none; color:var(--gold-primary); margin-bottom:20px; font-size:16px;">← رجوع للمصحف</button>
+                <div class="surah-banner" id="surah-header">
+                    <div class="surah-title-gold" id="current-surah-name">سورة</div>
+                </div>
+                <div class="glass-card quran-page" id="quran-content"></div>
             </div>
         </section>
 
         <!-- Settings -->
         <section id="settings-section">
             <div class="glass-card">
-                <h3 style="color:var(--gold-primary); margin-top:0; font-family:'Amiri'; font-size:24px;">تخصيص الأذكار</h3>
+                <h3 style="color:var(--gold-primary); margin-top:0;">تخصيص الأذكار</h3>
                 <div id="athkar-toggles"></div>
             </div>
         </section>
@@ -433,197 +280,146 @@
     </nav>
 
     <script>
-        let allSurahs = [], currentCat = 'morning', currentZekrIdx = 0, counter = 0;
         const athkarData = {
             morning: { label: "أذكار الصباح", items: [
                 { text: "أصبحنا وأصبح الملك لله، والحمد لله، لا إله إلا الله وحده لا شريك له، له الملك وله الحمد وهو على كل شيء قدير", target: 1 },
                 { text: "اللهم بك أصبحنا، وبك أمسينا، وبك نحيا، وبك نموت وإليك النشور", target: 1 },
                 { text: "أعوذ بكلمات الله التامات من شر ما خلق", target: 3 },
-                { text: "بسم الله الذي لا يضر مع اسمه شيء في الأرض ولا في السماء وهو السميع العليم", target: 3 },
-                { text: "رضيت بالله ربا وبالإسلام دينا وبمحمد صلى الله عليه وسلم نبيا", target: 3 },
-                { text: "يا حي يا قيوم برحمتك أستغيث أصلح لي شأني كله ولا تكلني إلى نفسي طرفة عين", target: 1 },
-                { text: "سبحان الله وبحمده: عدد خلقه، ورضا نفسه، وزنة عرشه، ومداد كلماته", target: 3 }
+                { text: "بسم الله الذي لا يضر مع اسمه شيء في الأرض ولا في السماء وهو السميع العليم", target: 3 }
             ]},
             evening: { label: "أذكار المساء", items: [
                 { text: "أمسينا وأمسى الملك لله، والحمد لله، لا إله إلا الله وحده لا شريك له", target: 1 },
-                { text: "اللهم بك أمسينا، وبك أصبحنا، وبك نحيا، وبك نموت وإليك المصير", target: 1 },
-                { text: "اللهم إني أسألك العفو والعافية في الدنيا والآخرة", target: 1 }
-            ]},
-            sleep: { label: "أذكار النوم", items: [
-                { text: "باسمك ربي وضعت جنبي، وبك أرفعه، فإن أمسكت نفسي فارحمها، وإن أرسلتها فاحفظها بما تحفظ به عبادك الصالحين", target: 1 },
-                { text: "اللهم قني عذابك يوم تبعث عبادك", target: 3 }
+                { text: "اللهم بك أمسينا، وبك أصبحنا، وبك نحيا، وبك نموت وإليك المصير", target: 1 }
             ]},
             afterPrayer: { label: "بعد الصلاة", items: [
-                { text: "أستغفر الله (ثلاثاً) .. اللهم أنت السلام ومنك السلام تباركت يا ذا الجلال الإكرام", target: 1 },
-                { text: "سبحان الله", target: 33 },
-                { text: "الحمد لله", target: 33 },
-                { text: "الله أكبر", target: 33 },
-                { text: "لا إله إلا الله وحده لا شريك له، له الملك وله الحمد وهو على كل شيء قدير", target: 1 }
+                { text: "أستغفر الله (ثلاثاً) .. اللهم أنت السلام ومنك السلام تباركت يا ذا الجلال والإكرام", target: 1 },
+                { text: "سبحان الله", target: 33 }, { text: "الحمد لله", target: 33 }, { text: "الله أكبر", target: 33 }
             ]}
         };
 
-        let enabledCategories = JSON.parse(localStorage.getItem('enabledAthkar')) || ['morning', 'evening', 'sleep', 'afterPrayer'];
+        let currentCat = 'morning', currentIdx = 0, counter = 0;
+        let enabledCats = JSON.parse(localStorage.getItem('enabledAthkar')) || ['morning', 'evening', 'afterPrayer'];
 
         function showSection(id, el) {
-            document.querySelectorAll('section').forEach(s => { s.classList.remove('active'); s.style.display = 'none'; });
+            document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
-            const target = document.getElementById(id + '-section');
-            target.style.display = 'block';
-            setTimeout(() => target.classList.add('active'), 50);
+            document.getElementById(id + '-section').classList.add('active');
             el.classList.add('active');
+            window.scrollTo(0,0);
         }
 
         async function fetchPrayerTimes() {
             const city = document.getElementById('city-select').value;
-            const date = new Date();
-            const dateStr = `${String(date.getDate()).padStart(2,'0')}-${String(date.getMonth()+1).padStart(2,'0')}-${date.getFullYear()}`;
             try {
-                const res = await fetch(`https://api.aladhan.com/v1/timingsByCity/${dateStr}?city=${encodeURIComponent(city)}&country=Saudi%20Arabia&method=4`);
+                const res = await fetch(`https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(city)}&country=Saudi%20Arabia&method=4`);
                 const data = await res.json();
                 const timings = data.data.timings;
-                const relevant = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+                const prayers = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
                 
-                // Reset active
-                document.querySelectorAll('.prayer-item').forEach(i => i.classList.remove('active'));
-
-                relevant.forEach(p => {
-                    const timeArr = timings[p].split(':');
-                    let h = parseInt(timeArr[0]), m = timeArr[1], ampm = h >= 12 ? 'م' : 'ص';
-                    h = h % 12 || 12;
-                    document.querySelector(`#p-${p} .prayer-time`).innerHTML = `${h}:${m}<span class="prayer-ampm">${ampm}</span>`;
+                prayers.forEach(p => {
+                    const time = timings[p];
+                    const [h, m] = time.split(':');
+                    const ampm = h >= 12 ? 'م' : 'ص';
+                    const h12 = h % 12 || 12;
+                    document.querySelector(`#p-${p} .prayer-time`).innerHTML = `${h12}:${m} <small>${ampm}</small>`;
+                    document.getElementById(`p-${p}`).classList.remove('active');
                 });
 
-                // Highlight next prayer
+                // Highlight next prayer (simple version)
                 const now = new Date();
-                const currentMins = now.getHours() * 60 + now.getMinutes();
-                let next = 'Fajr';
-                for (let p of relevant) {
-                    const t = timings[p].split(':');
-                    if (parseInt(t[0])*60 + parseInt(t[1]) > currentMins) { next = p; break; }
+                const curMinutes = now.getHours() * 60 + now.getMinutes();
+                for (let p of prayers) {
+                    const [ph, pm] = timings[p].split(':');
+                    if ((ph * 60 + parseInt(pm)) > curMinutes) {
+                        document.getElementById(`p-${p}`).classList.add('active');
+                        break;
+                    }
                 }
-                document.getElementById(`p-${next}`).classList.add('active');
             } catch (e) { console.error(e); }
-        }
-
-        function incrementCounter() {
-            const zekr = athkarData[currentCat].items[currentZekrIdx];
-            if (counter < zekr.target) {
-                counter++;
-                if (window.navigator.vibrate) window.navigator.vibrate(15);
-                updateZekrUI();
-            }
         }
 
         function updateZekrUI() {
-            const zekr = athkarData[currentCat].items[currentZekrIdx];
-            document.getElementById('the-zekr').innerText = zekr.text;
+            const item = athkarData[currentCat].items[currentIdx];
+            document.getElementById('the-zekr').innerText = item.text;
             document.getElementById('cnt').innerText = counter;
-            document.getElementById('target').innerText = '/ ' + zekr.target;
+            document.getElementById('target').innerText = '/ ' + item.target;
             
-            const circle = document.getElementById('progress-circle');
-            const circumference = 440;
-            const offset = circumference - (counter / zekr.target) * circumference;
-            circle.style.strokeDashoffset = offset;
+            const offset = 502.6 - (counter / item.target) * 502.6;
+            document.getElementById('progress-bar').style.strokeDashoffset = offset;
         }
 
-        function nextZekr() { currentZekrIdx = (currentZekrIdx + 1) % athkarData[currentCat].items.length; counter = 0; updateZekrUI(); }
-        function prevZekr() { currentZekrIdx = (currentZekrIdx - 1 + athkarData[currentCat].items.length) % athkarData[currentCat].items.length; counter = 0; updateZekrUI(); }
-
-        function initSettings() {
-            const container = document.getElementById('athkar-toggles');
-            container.innerHTML = Object.keys(athkarData).map(key => `
-                <div class="settings-item">
-                    <span>${athkarData[key].label}</span>
-                    <label class="switch">
-                        <input type="checkbox" ${enabledCategories.includes(key) ? 'checked' : ''} onchange="toggleCategory('${key}')">
-                        <span class="slider"></span>
-                    </label>
-                </div>
-            `).join('');
-            updateTabs();
+        function incrementCounter() {
+            const item = athkarData[currentCat].items[currentIdx];
+            if (counter < item.target) {
+                counter++;
+                if (window.navigator.vibrate) window.navigator.vibrate(15);
+                updateZekrUI();
+                if (counter === item.target && window.navigator.vibrate) window.navigator.vibrate([30, 50, 30]);
+            }
         }
 
-        function toggleCategory(key) {
-            if (enabledCategories.includes(key)) {
-                if (enabledCategories.length > 1) enabledCategories = enabledCategories.filter(c => c !== key);
-                else { initSettings(); return; }
-            } else enabledCategories.push(key);
-            localStorage.setItem('enabledAthkar', JSON.stringify(enabledCategories));
-            updateTabs();
-            if (!enabledCategories.includes(currentCat)) setCategory(enabledCategories[0]);
-        }
-
-        function updateTabs() {
-            const container = document.getElementById('active-tabs');
-            container.innerHTML = enabledCategories.map(key => `
-                <div class="cat-tab ${currentCat === key ? 'active' : ''}" onclick="setCategory('${key}')">${athkarData[key].label}</div>
-            `).join('');
-        }
-
-        function setCategory(cat) { currentCat = cat; currentZekrIdx = 0; counter = 0; updateTabs(); updateZekrUI(); }
-
-        async function loadSurahList() {
-            try {
-                const res = await fetch('https://api.alquran.cloud/v1/surah');
-                const data = await res.json();
-                allSurahs = data.data;
-                renderSurahs(allSurahs);
-            } catch (e) { console.error(e); }
-        }
-
-        function renderSurahs(list) {
-            document.getElementById('surah-list').innerHTML = list.map(s => `
-                <div class="surah-item" onclick="loadSurah(${s.number}, '${s.name}')">
-                    <div style="display:flex;align-items:center;gap:18px">
-                        <div style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;border:1px solid var(--gold-glow);border-radius:10px;color:var(--gold-primary);font-weight:700">${s.number}</div>
-                        <div>
-                            <div style="font-size:18px;font-weight:700">${s.name}</div>
-                            <div style="font-size:13px;color:var(--text-secondary)">${s.englishName}</div>
-                        </div>
-                    </div>
-                    <div style="color:var(--gold-primary);font-size:14px">${s.numberOfAyahs} آية</div>
-                </div>
-            `).join('');
-        }
-
-        function filterSurahs(val) {
-            const filtered = allSurahs.filter(s => s.name.includes(val) || s.englishName.toLowerCase().includes(val.toLowerCase()));
-            renderSurahs(filtered);
-        }
+        function nextZekr() { currentIdx = (currentIdx + 1) % athkarData[currentCat].items.length; counter = 0; updateZekrUI(); }
+        function prevZekr() { currentIdx = (currentIdx - 1 + athkarData[currentCat].items.length) % athkarData[currentCat].items.length; counter = 0; updateZekrUI(); }
 
         async function loadSurah(num, name) {
             document.getElementById('quran-browser').style.display = 'none';
             document.getElementById('quran-reader').style.display = 'block';
-            document.getElementById('quran-content').innerHTML = '<div style="text-align:center;padding:50px;color:var(--gold-primary)">جاري التحميل...</div>';
+            document.getElementById('current-surah-name').innerText = name;
+            const content = document.getElementById('quran-content');
+            content.innerHTML = '<div style="color:var(--gold-primary)">جاري التحميل...</div>';
+            
             try {
                 const res = await fetch(`https://api.alquran.cloud/v1/surah/${num}`);
                 const data = await res.json();
-                let html = `<div style="text-align:center;color:var(--gold-primary);font-size:32px;margin-bottom:30px;font-family:'Amiri'">${name}</div>`;
-                if (num !== 1 && num !== 9) html += '<div style="text-align:center;font-size:28px;color:var(--gold-primary);margin-bottom:30px">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>';
-                html += data.data.ayahs.map(a => `${a.text.replace('بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ', '')} <span class="ayah-num">${a.numberInSurah}</span>`).join(' ');
-                document.getElementById('quran-content').innerHTML = html;
+                let html = '';
+                if (num !== 1 && num !== 9) html += '<div style="font-size:1.8em; margin-bottom:30px; color:var(--gold-primary)">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>';
+                
+                html += data.data.ayahs.map(a => {
+                    let text = a.text;
+                    if (a.numberInSurah === 1 && num !== 1 && num !== 9) text = text.replace('بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ', '');
+                    return `${text} <span class="verse-num">${a.numberInSurah}</span>`;
+                }).join(' ');
+                
+                content.innerHTML = html;
                 window.scrollTo(0,0);
-            } catch (e) { document.getElementById('quran-content').innerText = 'خطأ في التحميل'; }
+            } catch (e) { content.innerText = 'خطأ في الاتصال'; }
         }
 
         function backToBrowser() { document.getElementById('quran-browser').style.display = 'block'; document.getElementById('quran-reader').style.display = 'none'; }
 
-        // SW Version check
+        async function initQuran() {
+            const res = await fetch('https://api.alquran.cloud/v1/surah');
+            const data = await res.json();
+            document.getElementById('surah-list').innerHTML = data.data.map(s => `
+                <div class="prayer-item" style="display:flex; justify-content:space-between; align-items:center; cursor:pointer;" onclick="loadSurah(${s.number}, '${s.name}')">
+                    <div style="display:flex; align-items:center; gap:15px;">
+                        <span style="color:var(--gold-primary); font-weight:bold; width:30px;">${s.number}</span>
+                        <span style="font-size:18px;">${s.name}</span>
+                    </div>
+                    <span style="color:var(--text-secondary); font-size:12px;">${s.englishName}</span>
+                </div>
+            `).join('');
+        }
+
+        // SW Force Update
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js').then(reg => {
-                reg.addEventListener('updatefound', () => {
-                    const newWorker = reg.installing;
-                    newWorker.addEventListener('statechange', () => {
-                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                reg.onupdatefound = () => {
+                    const installingWorker = reg.installing;
+                    installingWorker.onstatechange = () => {
+                        if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
                             window.location.reload();
                         }
-                    });
-                });
+                    };
+                };
             });
         }
 
-        initSettings(); fetchPrayerTimes(); updateZekrUI(); loadSurahList();
-        setInterval(fetchPrayerTimes, 60000);
+        fetchPrayerTimes(); updateZekrUI(); initQuran();
+        // Init tabs
+        document.getElementById('active-tabs').innerHTML = enabledCats.map(c => `
+            <div class="prayer-item ${currentCat === c ? 'active' : ''}" style="padding:8px 15px; white-space:nowrap; cursor:pointer;" onclick="currentCat='${c}'; currentIdx=0; counter=0; updateZekrUI(); document.querySelectorAll('#active-tabs .prayer-item').forEach(i=>i.classList.remove('active')); this.classList.add('active');">${athkarData[c].label}</div>
+        `).join('');
     </script>
 </body>
 </html>
