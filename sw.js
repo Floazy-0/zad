@@ -1,4 +1,4 @@
-const CACHE_NAME = 'zad-v1.4';
+const CACHE_NAME = 'zad-v1.5';
 const assets = [
   './',
   './index.html',
@@ -16,7 +16,7 @@ self.addEventListener('activate', e => {
   e.waitUntil(
     caches.keys().then(keys => Promise.all(
       keys.map(key => key !== CACHE_NAME ? caches.delete(key) : null)
-    ))
+    )).then(() => self.clients.claim())
   );
 });
 
