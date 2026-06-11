@@ -1,4 +1,4 @@
-const CACHE_NAME = 'zad-v1.5';
+const CACHE_NAME = 'v1.6-king-fahd';
 const assets = [
   './',
   './index.html',
