@@ -1,4 +1,4 @@
-const CACHE_NAME = 'v1.6-king-fahd';
+const CACHE_NAME = 'v2.0-muezzin-saudi';
 const assets = [
   './',
   './index.html',
