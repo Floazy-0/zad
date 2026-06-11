@@ -1,9 +1,8 @@
-const CACHE_NAME = 'zad-v1.3-physical-quran';
+const CACHE_NAME = 'zad-v1.4';
 const assets = [
   './',
   './index.html',
-  './manifest.json',
-  'https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Tajawal:wght@300;400;500;700&family=Scheherazade+New:wght@400;700&display=swap'
+  './manifest.json'
 ];
 
 self.addEventListener('install', e => {
@@ -16,22 +15,15 @@ self.addEventListener('install', e => {
 self.addEventListener('activate', e => {
   e.waitUntil(
     caches.keys().then(keys => Promise.all(
-      keys.map(key => {
-        if (key !== CACHE_NAME) return caches.delete(key);
-      })
+      keys.map(key => key !== CACHE_NAME ? caches.delete(key) : null)
     ))
   );
 });
 
 self.addEventListener('fetch', e => {
-  // Network First for HTML to ensure latest deployment
   if (e.request.mode === 'navigate') {
-    e.respondWith(
-      fetch(e.request).catch(() => caches.match(e.request))
-    );
+    e.respondWith(fetch(e.request).catch(() => caches.match('./index.html')));
     return;
   }
-  e.respondWith(
-    caches.match(e.request).then(res => res || fetch(e.request))
-  );
+  e.respondWith(caches.match(e.request).then(res => res || fetch(e.request)));
 });
