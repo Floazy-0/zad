@@ -412,6 +412,21 @@
     </nav>
 
     <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').then(reg => {
+                    reg.onupdatefound = () => {
+                        const installingWorker = reg.installing;
+                        installingWorker.onstatechange = () => {
+                            if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                window.location.reload();
+                            }
+                        };
+                    };
+                });
+            });
+        }
+
         let allSurahs = [], currentCat = 'morning', currentZekrIdx = 0, counter = 0;
         const athkarData = {
             morning: { label: "أذكار الصباح", items: [
@@ -565,7 +580,7 @@
                 const data = await res.json();
                 let html = `<div style="color:var(--gold);margin-bottom:20px">${name}</div>`;
                 if (num !== 1 && num !== 9) html += '<div style="font-size:30px;color:var(--gold);margin-bottom:20px">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>';
-                html += data.data.ayahs.map(a => `${a.text.replace('بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ', '')} <span style="color:var(--gold);font-size:16px">[${a.numberInSurah}]</span>`).join(' ');
+                html += data.data.ayahs.map(a => `${a.text.replace('بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّhِمِ', '')} <span style="color:var(--gold);font-size:16px">[${a.numberInSurah}]</span>`).join(' ');
                 document.getElementById('quran-content').innerHTML = html;
             } catch (e) { document.getElementById('quran-content').innerText = 'خطأ في التحميل'; }
         }
