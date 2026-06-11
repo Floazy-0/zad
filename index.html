@@ -404,11 +404,11 @@
                 
                 // Add stylized Basmalah for all surahs except At-Tawbah (9)
                 if (num !== 9) {
-                    html += \`
+                    html += `
                         <div class="basmalah-container">
-                            <div class="basmalah-text">\${BASMALAH}</div>
+                            <div class="basmalah-text">${BASMALAH}</div>
                         </div>
-                    \`;
+                    `;
                 }
 
                 html += data.data.ayahs.map(a => {
@@ -417,11 +417,20 @@
                     if (a.numberInSurah === 1 && num !== 1 && num !== 9) {
                         text = text.replace(BASMALAH, "").trim();
                     }
-                    return \`\${text} <span class="verse-end">\${a.numberInSurah}</span>\`;
+                    return `${text} <span class="verse-end">${a.numberInSurah}</span>`;
                 }).join(' ');
                 
                 document.getElementById('quran-content').innerHTML = html;
             } catch (e) { console.error(e); }
+        }
+
+        function filterSurahs(query) {
+            const surahs = document.getElementById('surah-list').children;
+            const q = query.toLowerCase();
+            for (let s of surahs) {
+                const text = s.innerText.toLowerCase();
+                s.style.display = text.includes(q) ? 'flex' : 'none';
+            }
         }
 
         function backToBrowser() { document.getElementById('quran-browser').style.display = 'block'; document.getElementById('quran-reader').style.display = 'none'; }
@@ -429,12 +438,12 @@
         async function initQuran() {
             const res = await fetch('https://api.alquran.cloud/v1/surah');
             const data = await res.json();
-            document.getElementById('surah-list').innerHTML = data.data.map(s => \`
-                <div class="glass-card" style="padding:15px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center" onclick="loadSurah(\${s.number}, '\${s.name}')">
-                    <span>\${s.number}. \${s.name}</span>
-                    <span style="color:var(--gold-primary);font-size:14px">\${s.englishName}</span>
+            document.getElementById('surah-list').innerHTML = data.data.map(s => `
+                <div class="glass-card" style="padding:15px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center" onclick="loadSurah(${s.number}, '${s.name}')">
+                    <span>${s.number}. ${s.name}</span>
+                    <span style="color:var(--gold-primary);font-size:14px">${s.englishName}</span>
                 </div>
-            \`).join('');
+            `).join('');
         }
 
         if ('serviceWorker' in navigator) {
