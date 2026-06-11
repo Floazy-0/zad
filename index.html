@@ -144,7 +144,6 @@
             color: var(--text-secondary);
         }
 
-        /* Athkar Category Tabs */
         .category-tabs {
             display: flex;
             overflow-x: auto;
@@ -255,7 +254,7 @@
             color: var(--text-secondary);
             font-size: 12px;
             text-decoration: none;
-            width: 33%;
+            width: 25%;
         }
 
         .tab-item.active { color: var(--gold); }
@@ -263,6 +262,43 @@
 
         section { display: none; }
         section.active { display: block; }
+
+        .settings-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 0.5px solid rgba(212, 175, 55, 0.1);
+        }
+        .settings-item:last-child { border-bottom: none; }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: .4s;
+            border-radius: 24px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px; width: 18px;
+            left: 2px; bottom: 2px;
+            background-color: var(--text-secondary);
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider { background-color: rgba(212, 175, 55, 0.2); border-color: var(--gold); }
+        input:checked + .slider:before { transform: translateX(20px); background-color: var(--gold); }
     </style>
 </head>
 <body onclick="exitFocusIfActive(event)">
@@ -274,30 +310,42 @@
             <div class="glass-card">
                 <div class="city-selector-container">
                     <select id="city-select" class="city-selector" onchange="fetchPrayerTimes()">
-                        <option value="Hafar Al Batin" selected>حفر الباطن</option>
-                        <option value="Riyadh">الرياض</option>
-                        <option value="Mecca">مكة المكرمة</option>
-                        <option value="Medina">المدينة المنورة</option>
-                        <option value="Jeddah">جدة</option>
-                        <option value="Dammam">الدمام</option>
-                        <option value="Taif">الطائف</option>
-                        <option value="Tabuk">تبوك</option>
-                        <option value="Buraydah">بريدة</option>
-                        <option value="Khamis Mushait">خميس مشيط</option>
-                        <option value="Al-Khobar">الخبر</option>
-                        <option value="Hofuf">الهفوف</option>
-                        <option value="Jubail">الجبيل</option>
-                        <option value="Hail">حائل</option>
-                        <option value="Najran">نجران</option>
-                        <option value="Abha">أبها</option>
-                        <option value="Yanbu">ينبع</option>
-                        <option value="Jizan">جيزان</option>
-                        <option value="Al-Baha">الباحة</option>
-                        <option value="Arar">عرعر</option>
-                        <option value="Sakaka">سكاكا</option>
-                        <option value="Al-Qurayyat">القريات</option>
-                        <option value="Dhahran">الظهران</option>
-                        <option value="Qatif">القطيف</option>
+                        <optgroup label="المنطقة الوسطى">
+                            <option value="Riyadh" selected>الرياض</option>
+                            <option value="Buraydah">بريدة</option>
+                            <option value="Unaizah">عنيزة</option>
+                            <option value="Al-Kharj">الخرج</option>
+                            <option value="Majmaah">المجمعة</option>
+                        </optgroup>
+                        <optgroup label="المنطقة الغربية">
+                            <option value="Mecca">مكة المكرمة</option>
+                            <option value="Medina">المدينة المنورة</option>
+                            <option value="Jeddah">جدة</option>
+                            <option value="Taif">الطائف</option>
+                            <option value="Yanbu">ينبع</option>
+                        </optgroup>
+                        <optgroup label="المنطقة الشرقية">
+                            <option value="Dammam">الدمام</option>
+                            <option value="Al-Khobar">الخبر</option>
+                            <option value="Hofuf">الهفوف</option>
+                            <option value="Jubail">الجبيل</option>
+                            <option value="Qatif">القطيف</option>
+                            <option value="Hafar Al Batin">حفر الباطن</option>
+                        </optgroup>
+                        <optgroup label="المنطقة الشمالية">
+                            <option value="Tabuk">تبوك</option>
+                            <option value="Hail">حائل</option>
+                            <option value="Arar">عرعر</option>
+                            <option value="Sakaka">سكاكا</option>
+                            <option value="Al-Qurayyat">القريات</option>
+                        </optgroup>
+                        <optgroup label="المنطقة الجنوبية">
+                            <option value="Abha">أبها</option>
+                            <option value="Khamis Mushait">خميس مشيط</option>
+                            <option value="Najran">نجران</option>
+                            <option value="Jizan">جيزان</option>
+                            <option value="Al-Baha">الباحة</option>
+                        </optgroup>
                     </select>
                 </div>
                 <div class="prayer-grid" id="prayer-times">
@@ -311,12 +359,7 @@
         </section>
 
         <section id="athkar-section">
-            <div class="category-tabs">
-                <div class="cat-tab active" onclick="setCategory('morning', this)">أذكار الصباح</div>
-                <div class="cat-tab" onclick="setCategory('evening', this)">أذكار المساء</div>
-                <div class="cat-tab" onclick="setCategory('sleep', this)">أذكار النوم</div>
-                <div class="cat-tab" onclick="setCategory('afterPrayer', this)">بعد الصلاة</div>
-            </div>
+            <div class="category-tabs" id="active-tabs"></div>
             <div class="glass-card">
                 <div class="athkar-text" id="the-zekr">جاري التحميل...</div>
                 <div class="counter-btn" onclick="incrementCounter()">
@@ -344,6 +387,13 @@
                 <div class="glass-card"><div id="quran-content" class="quran-content"></div></div>
             </div>
         </section>
+
+        <section id="settings-section">
+            <div class="glass-card">
+                <h3 style="color:var(--gold);margin-top:0">تخصيص الأذكار</h3>
+                <div id="athkar-toggles"></div>
+            </div>
+        </section>
     </div>
 
     <nav class="tabs">
@@ -356,12 +406,15 @@
         <a href="javascript:void(0)" class="tab-item" onclick="showSection('quran', this)">
             <svg class="tab-icon" viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg><span>المصحف</span>
         </a>
+        <a href="javascript:void(0)" class="tab-item" onclick="showSection('settings', this)">
+            <svg class="tab-icon" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg><span>الإعدادات</span>
+        </a>
     </nav>
 
     <script>
         let allSurahs = [], currentCat = 'morning', currentZekrIdx = 0, counter = 0;
         const athkarData = {
-            morning: [
+            morning: { label: "أذكار الصباح", items: [
                 { text: "أصبحنا وأصبح الملك لله، والحمد لله، لا إله إلا الله وحده لا شريك له، له الملك وله الحمد وهو على كل شيء قدير", target: 1 },
                 { text: "اللهم بك أصبحنا، وبك أمسينا، وبك نحيا، وبك نموت وإليك النشور", target: 1 },
                 { text: "أعوذ بكلمات الله التامات من شر ما خلق", target: 3 },
@@ -369,24 +422,62 @@
                 { text: "رضيت بالله ربا وبالإسلام دينا وبمحمد صلى الله عليه وسلم نبيا", target: 3 },
                 { text: "يا حي يا قيوم برحمتك أستغيث أصلح لي شأني كله ولا تكلني إلى نفسي طرفة عين", target: 1 },
                 { text: "سبحان الله وبحمده: عدد خلقه، ورضا نفسه، وزنة عرشه، ومداد كلماته", target: 3 }
-            ],
-            evening: [
+            ]},
+            evening: { label: "أذكار المساء", items: [
                 { text: "أمسينا وأمسى الملك لله، والحمد لله، لا إله إلا الله وحده لا شريك له", target: 1 },
                 { text: "اللهم بك أمسينا، وبك أصبحنا، وبك نحيا، وبك نموت وإليك المصير", target: 1 },
                 { text: "اللهم إني أسألك العفو والعافية في الدنيا والآخرة", target: 1 }
-            ],
-            sleep: [
+            ]},
+            sleep: { label: "أذكار النوم", items: [
                 { text: "باسمك ربي وضعت جنبي، وبك أرفعه، فإن أمسكت نفسي فارحمها، وإن أرسلتها فاحفظها بما تحفظ به عبادك الصالحين", target: 1 },
                 { text: "اللهم قني عذابك يوم تبعث عبادك", target: 3 }
-            ],
-            afterPrayer: [
+            ]},
+            afterPrayer: { label: "بعد الصلاة", items: [
                 { text: "أستغفر الله (ثلاثاً) .. اللهم أنت السلام ومنك السلام تباركت يا ذا الجلال والإكرام", target: 1 },
                 { text: "سبحان الله", target: 33 },
                 { text: "الحمد لله", target: 33 },
                 { text: "الله أكبر", target: 33 },
                 { text: "لا إله إلا الله وحده لا شريك له، له الملك وله الحمد وهو على كل شيء قدير", target: 1 }
-            ]
+            ]}
         };
+
+        let enabledCategories = JSON.parse(localStorage.getItem('enabledAthkar')) || ['morning', 'evening', 'sleep', 'afterPrayer'];
+
+        function initSettings() {
+            const container = document.getElementById('athkar-toggles');
+            container.innerHTML = Object.keys(athkarData).map(key => `
+                <div class="settings-item">
+                    <span>${athkarData[key].label}</span>
+                    <label class="switch">
+                        <input type="checkbox" ${enabledCategories.includes(key) ? 'checked' : ''} onchange="toggleCategory('${key}')">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            `).join('');
+            updateTabs();
+        }
+
+        function toggleCategory(key) {
+            if (enabledCategories.includes(key)) {
+                if (enabledCategories.length > 1) {
+                    enabledCategories = enabledCategories.filter(c => c !== key);
+                } else {
+                    initSettings(); return;
+                }
+            } else {
+                enabledCategories.push(key);
+            }
+            localStorage.setItem('enabledAthkar', JSON.stringify(enabledCategories));
+            updateTabs();
+            if (!enabledCategories.includes(currentCat)) setCategory(enabledCategories[0], null);
+        }
+
+        function updateTabs() {
+            const container = document.getElementById('active-tabs');
+            container.innerHTML = enabledCategories.map(key => `
+                <div class="cat-tab ${currentCat === key ? 'active' : ''}" onclick="setCategory('${key}', this)">${athkarData[key].label}</div>
+            `).join('');
+        }
 
         function showSection(id, el) {
             document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
@@ -397,8 +488,7 @@
 
         function setCategory(cat, el) {
             currentCat = cat; currentZekrIdx = 0; counter = 0;
-            document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
-            el.classList.add('active');
+            updateTabs();
             updateZekrUI();
         }
 
@@ -425,7 +515,7 @@
         }
 
         function incrementCounter() {
-            const zekr = athkarData[currentCat][currentZekrIdx];
+            const zekr = athkarData[currentCat].items[currentZekrIdx];
             if (counter < zekr.target) {
                 counter++;
                 if (counter === zekr.target && window.navigator.vibrate) window.navigator.vibrate(100);
@@ -434,7 +524,7 @@
         }
 
         function updateZekrUI() {
-            const zekr = athkarData[currentCat][currentZekrIdx];
+            const zekr = athkarData[currentCat].items[currentZekrIdx];
             document.getElementById('the-zekr').innerText = zekr.text;
             document.getElementById('cnt').innerText = counter;
             document.getElementById('target').innerText = '/ ' + zekr.target;
@@ -442,8 +532,8 @@
             btn.style.borderColor = counter >= zekr.target ? '#00ff00' : 'var(--gold)';
         }
 
-        function nextZekr() { currentZekrIdx = (currentZekrIdx + 1) % athkarData[currentCat].length; counter = 0; updateZekrUI(); }
-        function prevZekr() { currentZekrIdx = (currentZekrIdx - 1 + athkarData[currentCat].length) % athkarData[currentCat].length; counter = 0; updateZekrUI(); }
+        function nextZekr() { currentZekrIdx = (currentZekrIdx + 1) % athkarData[currentCat].items.length; counter = 0; updateZekrUI(); }
+        function prevZekr() { currentZekrIdx = (currentZekrIdx - 1 + athkarData[currentCat].items.length) % athkarData[currentCat].items.length; counter = 0; updateZekrUI(); }
 
         async function loadSurahList() {
             try {
@@ -482,7 +572,7 @@
 
         function backToBrowser() { document.getElementById('quran-browser').style.display = 'block'; document.getElementById('quran-reader').style.display = 'none'; }
         
-        fetchPrayerTimes(); updateZekrUI(); loadSurahList();
+        initSettings(); fetchPrayerTimes(); updateZekrUI(); loadSurahList();
         setInterval(() => { fetchPrayerTimes(); }, 600000);
     </script>
 </body>
