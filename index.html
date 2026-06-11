@@ -562,8 +562,13 @@
         // --- Prayer Times ---
         function format12Hour(timeStr) {
             if (!timeStr) return "--:--";
-            let [hours, minutes] = timeStr.split(':');
-            hours = parseInt(hours);
+            
+            // Extract only HH:mm using regex to ignore suffixes like (AST)
+            const match = timeStr.match(/(\d{2}):(\d{2})/);
+            if (!match) return "--:--";
+            
+            let hours = parseInt(match[1]);
+            const minutes = match[2];
             const ampm = hours >= 12 ? 'م' : 'ص';
             hours = hours % 12;
             hours = hours ? hours : 12; // the hour '0' should be '12'
@@ -572,8 +577,14 @@
 
         async function fetchPrayerTimes() {
             const city = document.getElementById('city-select').value;
+            
+            // Get local date in DD-MM-YYYY format
+            const now = new Date();
+            const dateStr = `${String(now.getDate()).padStart(2, '0')}-${String(now.getMonth() + 1).padStart(2, '0')}-${now.getFullYear()}`;
+            
             try {
-                const res = await fetch(`https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(city)}&country=Saudi%20Arabia&method=4`);
+                // Include date and iso8601=1 for robust parsing
+                const res = await fetch(`https://api.aladhan.com/v1/timingsByCity/${dateStr}?city=${encodeURIComponent(city)}&country=Saudi%20Arabia&method=4&iso8601=1`);
                 const data = await res.json();
                 const timings = data.data.timings;
                 const prayers = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
@@ -698,6 +709,16 @@
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js');
         }
+
+        // --- Midnight Refresh ---
+        let lastCheckedDay = new Date().getDate();
+        setInterval(() => {
+            const currentDay = new Date().getDate();
+            if (currentDay !== lastCheckedDay) {
+                lastCheckedDay = currentDay;
+                fetchPrayerTimes(); // Refresh for the new day
+            }
+        }, 60000); 
     </script>
 </body>
 </html>
