@@ -174,6 +174,9 @@
 
         .loader { width: 40px; height: 40px; border: 4px solid rgba(197, 160, 89, 0.1); border-top-color: var(--gold-primary); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .cat-button { background: rgba(197, 160, 89, 0.1); border: 1px solid var(--gold-primary); color: var(--gold-primary); padding: 8px 15px; border-radius: 20px; font-family: 'Tajawal'; font-size: 14px; white-space: nowrap; margin-bottom: 10px;}
+        .cat-button.active { background: var(--gold-primary); color: white; }
     </style>
 </head>
 <body>
@@ -197,7 +200,6 @@
                     <option value="Hafar Al Batin">حفر الباطن</option>
                 </select>
                 <div style="margin-top:20px; display:grid; grid-template-columns: 1fr 1fr; gap:15px;" id="prayer-times">
-                    <!-- Prayer items here -->
                 </div>
             </div>
         </section>
@@ -222,7 +224,7 @@
 
         <!-- Athkar Section -->
         <section id="athkar-section">
-            <div id="athkar-cats" style="display:flex;overflow-x:auto;gap:10px;margin-bottom:20px"></div>
+            <div id="athkar-cats" style="display:flex;overflow-x:auto;gap:10px;margin-bottom:20px;padding-bottom:10px"></div>
             <div class="glass-card" style="text-align:center">
                 <div id="zekr-text" style="font-family:'Amiri';font-size:1.4rem;line-height:2;min-height:150px;display:flex;align-items:center;justify-content:center">جاري التحميل...</div>
                 <div id="zekr-counter" style="margin:20px auto;width:100px;height:100px;border:5px solid var(--gold-primary);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer" onclick="countZekr()">
@@ -245,8 +247,8 @@
         </div>
         <div class="reader-body" id="reader-container"></div>
         <div style="display:flex;justify-content:space-between;padding:15px;background:var(--glass-bg);backdrop-filter:blur(20px)">
-            <button onclick="navPage(1)" class="cat-tab" style="background:rgba(197,160,89,0.1);border:1px solid var(--gold-primary);color:var(--gold-primary);padding:10px 25px;border-radius:10px">السابق</button>
-            <button onclick="navPage(-1)" class="cat-tab" style="background:rgba(197,160,89,0.1);border:1px solid var(--gold-primary);color:var(--gold-primary);padding:10px 25px;border-radius:10px">التالي</button>
+            <button onclick="navPage(1)" class="cat-button" style="padding:10px 25px">السابق</button>
+            <button onclick="navPage(-1)" class="cat-button" style="padding:10px 25px">التالي</button>
         </div>
     </div>
 
@@ -263,19 +265,17 @@
     </nav>
 
     <script>
-        let surahs = [], currentView = 'surah', currentPage = 1;
-        const athkarData = [
-            { text: "أصبحنا وأصبح الملك لله", target: 1 },
-            { text: "سبحان الله", target: 33 },
-            { text: "الحمد لله", target: 33 },
-            { text: "الله أكبر", target: 33 }
-        ];
+        let surahs = [], currentView = 'surah', currentPage = 1, fullAthkar = [], activeCatIdx = 0, zIdx = 0, zCnt = 0;
 
         async function init() {
             try {
-                const res = await fetch('https://api.alquran.cloud/v1/surah');
-                const data = await res.json();
-                surahs = data.data;
+                const [surahRes, athkarRes] = await Promise.all([
+                    fetch('https://api.alquran.cloud/v1/surah'),
+                    fetch('athkar.json')
+                ]);
+                const surahData = await surahRes.json();
+                fullAthkar = (await athkarRes.json()).categories;
+                surahs = surahData.data;
                 renderSurahIndex();
                 fetchPrayerTimes();
                 initAthkar();
@@ -409,24 +409,37 @@
             `).join('');
         }
 
-        let zIdx = 0, zCnt = 0;
         function initAthkar() {
+            const cats = document.getElementById('athkar-cats');
+            cats.innerHTML = fullAthkar.map((c, i) => `<button class="cat-button ${i === 0 ? 'active' : ''}" onclick="selectCat(${i})">${c.name}</button>`).join('');
             updateZekr();
         }
+
+        function selectCat(idx) {
+            activeCatIdx = idx;
+            zIdx = 0; zCnt = 0;
+            document.querySelectorAll('.cat-button').forEach((b, i) => b.classList.toggle('active', i === idx));
+            updateZekr();
+        }
+
         function updateZekr() {
-            const z = athkarData[zIdx];
+            const z = fullAthkar[activeCatIdx].athkar[zIdx];
             document.getElementById('zekr-text').innerText = z.text;
             document.getElementById('current-cnt').innerText = zCnt;
-            document.getElementById('target-cnt').innerText = '/ ' + z.target;
+            document.getElementById('target-cnt').innerText = '/ ' + z.count;
         }
+
         function countZekr() {
-            if (zCnt < athkarData[zIdx].target) {
+            const target = fullAthkar[activeCatIdx].athkar[zIdx].count;
+            if (zCnt < target - 1) {
                 zCnt++;
                 updateZekr();
             } else {
-                zIdx = (zIdx + 1) % athkarData.length;
-                zCnt = 0;
-                updateZekr();
+                if (zIdx < fullAthkar[activeCatIdx].athkar.length - 1) {
+                    zIdx++;
+                    zCnt = 0;
+                    updateZekr();
+                }
             }
         }
 
