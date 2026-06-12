@@ -444,6 +444,10 @@
         }
 
         init();
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').catch(e => console.error('SW registration failed', e));
+        }
     </script>
 </body>
 </html>
