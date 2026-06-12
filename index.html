@@ -122,9 +122,6 @@
             width: 100%; max-width: 600px;
             background-color: var(--mushaf-bg);
             border: 8px double var(--mushaf-border);
-            outline: 2px solid var(--gold-primary);
-            outline-offset: -12px;
-            border-radius: 4px;
             padding: 35px 20px;
             box-shadow: 0 15px 40px rgba(0,0,0,0.4);
             color: var(--quran-text);
@@ -138,6 +135,7 @@
             border: 1px solid var(--gold-primary);
             margin: 0 auto 30px; padding: 8px 15px;
             text-align: center; max-width: 80%;
+            border-radius: 8px;
         }
         .surah-header-kingfahd h2 { margin: 0; font-family: 'Amiri', serif; font-size: 22px; color: var(--gold-primary); }
 
@@ -155,7 +153,7 @@
         .verse-ornament {
             display: inline-flex; align-items: center; justify-content: center;
             width: 32px; height: 32px;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 0 L60 35 L95 35 L65 55 L75 90 L50 70 L25 90 L35 55 L5 35 L40 35 Z' fill='none' stroke='%23C5A059' stroke-width='4'/%3E%3Ccircle cx='50' cy='50' r='30' fill='none' stroke='%23C5A059' stroke-width='2'/%3E%3C/svg%3E") no-repeat center;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='none' stroke='%23C5A059' stroke-width='4'/%3E%3Ctext x='50%' y='55%' text-anchor='middle' font-size='30' font-family='Tajawal' fill='%23C5A059'%3E%3C/text%3E%3C/svg%3E") no-repeat center;
             background-size: contain; margin: 0 5px; font-size: 11px; font-family: 'Tajawal'; font-weight: bold;
         }
 
@@ -233,14 +231,6 @@
                 </div>
             </div>
         </section>
-
-        <!-- Settings Section -->
-        <section id="settings-section">
-            <div class="glass-card">
-                <h3 style="color:var(--gold-primary);margin-top:0">الإعدادات</h3>
-                <p>نسخة: 2.0 (Premium)</p>
-            </div>
-        </section>
     </div>
 
     <!-- Quran Reader Overlay -->
@@ -253,9 +243,7 @@
             </div>
             <div style="width:40px"></div>
         </div>
-        <div class="reader-body" id="reader-container">
-            <!-- Quran content -->
-        </div>
+        <div class="reader-body" id="reader-container"></div>
         <div style="display:flex;justify-content:space-between;padding:15px;background:var(--glass-bg);backdrop-filter:blur(20px)">
             <button onclick="navPage(1)" class="cat-tab" style="background:rgba(197,160,89,0.1);border:1px solid var(--gold-primary);color:var(--gold-primary);padding:10px 25px;border-radius:10px">السابق</button>
             <button onclick="navPage(-1)" class="cat-tab" style="background:rgba(197,160,89,0.1);border:1px solid var(--gold-primary);color:var(--gold-primary);padding:10px 25px;border-radius:10px">التالي</button>
@@ -272,13 +260,16 @@
         <a href="javascript:void(0)" class="tab-item" onclick="showSection('athkar', this)">
             <svg class="tab-icon" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg><span>الأذكار</span>
         </a>
-        <a href="javascript:void(0)" class="tab-item" onclick="showSection('settings', this)">
-            <svg class="tab-icon" viewBox="0 0 24 24"><path d="M12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg><span>الإعدادات</span>
-        </a>
     </nav>
 
     <script>
         let surahs = [], currentView = 'surah', currentPage = 1;
+        const athkarData = [
+            { text: "أصبحنا وأصبح الملك لله", target: 1 },
+            { text: "سبحان الله", target: 33 },
+            { text: "الحمد لله", target: 33 },
+            { text: "الله أكبر", target: 33 }
+        ];
 
         async function init() {
             try {
@@ -315,9 +306,8 @@
                     <div class="surah-num">${s.number}</div>
                     <div class="surah-info">
                         <span class="surah-name">${s.name}</span>
-                        <span class="surah-meta">${s.englishName} • ${s.numberOfAyahs} آية</span>
+                        <span class="surah-meta">${s.numberOfAyahs} آية</span>
                     </div>
-                    <svg style="width:20px;height:20px;fill:var(--gold-primary)" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
                 </div>
             `).join('');
             document.getElementById('index-content').innerHTML = html;
@@ -329,9 +319,7 @@
                 html += `
                 <div class="index-item" onclick="openPageByJuz(${i})">
                     <div class="surah-num">${i}</div>
-                    <div class="surah-info">
-                        <span class="surah-name">الجزء ${i}</span>
-                    </div>
+                    <div class="surah-info"><span class="surah-name">الجزء ${i}</span></div>
                 </div>`;
             }
             document.getElementById('index-content').innerHTML = html;
@@ -364,7 +352,7 @@
 
         function openPage(p) {
             currentPage = p;
-            showReader(`صفحة ${p}`, '', `<div class="mushaf-page"><img src="https://android.quran.com/data/page${String(p).padStart(3, '0')}.png" class="mushaf-image" onerror="this.src='https://via.placeholder.com/400x600?text=Page+${p}'"></div>`);
+            showReader(`صفحة ${p}`, '', `<div class="mushaf-page"><img src="https://android.quran.com/data/page${String(p).padStart(3, '0')}.png" class="mushaf-image"></div>`);
         }
 
         function openPageByJuz(j) {
@@ -400,7 +388,13 @@
             openPage(currentPage);
         }
 
-        // PRAYER TIMES
+        function format12h(timeStr) {
+            let [h, m] = timeStr.split(':');
+            const ampm = h >= 12 ? 'PM' : 'AM';
+            h = h % 12 || 12;
+            return `${h}:${m} ${ampm}`;
+        }
+
         async function fetchPrayerTimes() {
             const city = document.getElementById('city-select').value;
             const res = await fetch(`https://api.aladhan.com/v1/timingsByCity?city=${city}&country=Saudi%20Arabia&method=4`);
@@ -410,44 +404,33 @@
             document.getElementById('prayer-times').innerHTML = ['Fajr','Dhuhr','Asr','Maghrib','Isha'].map(p => `
                 <div class="glass-card" style="text-align:center;margin-bottom:0;padding:15px">
                     <div style="font-size:14px;color:var(--text-secondary);margin-bottom:5px">${names[p]}</div>
-                    <div style="font-size:20px;font-weight:700;color:var(--gold-primary)">${t[p]}</div>
+                    <div style="font-size:20px;font-weight:700;color:var(--gold-primary)">${format12h(t[p])}</div>
                 </div>
             `).join('');
         }
 
-        // ATHKAR
-        const athkar = [
-            { text: "أصبحنا وأصبح الملك لله", target: 1, cat: "morning" },
-            { text: "سبحان الله", target: 33, cat: "after" },
-            { text: "الحمد لله", target: 33, cat: "after" }
-        ];
         let zIdx = 0, zCnt = 0;
         function initAthkar() {
             updateZekr();
         }
         function updateZekr() {
-            const z = athkar[zIdx];
+            const z = athkarData[zIdx];
             document.getElementById('zekr-text').innerText = z.text;
             document.getElementById('current-cnt').innerText = zCnt;
             document.getElementById('target-cnt').innerText = '/ ' + z.target;
         }
         function countZekr() {
-            if (zCnt < athkar[zIdx].target) {
+            if (zCnt < athkarData[zIdx].target) {
                 zCnt++;
-                if (navigator.vibrate) navigator.vibrate(10);
                 updateZekr();
             } else {
-                zIdx = (zIdx + 1) % athkar.length;
+                zIdx = (zIdx + 1) % athkarData.length;
                 zCnt = 0;
                 updateZekr();
             }
         }
 
         init();
-
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js').catch(e => console.error('SW registration failed', e));
-        }
     </script>
 </body>
 </html>
