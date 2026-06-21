@@ -48,6 +48,7 @@
         header {
             padding: calc(var(--safe-top) + 15px) 20px 15px;
             text-align: center;
+            background: #0c0c0c; /* Solid fallback */
             background: var(--glass-bg);
             backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
             border-bottom: 1px solid rgba(197, 160, 89, 0.15);
@@ -64,6 +65,7 @@
         .container { padding: 15px; padding-bottom: calc(var(--safe-bottom) + 110px); }
 
         .glass-card {
+            background: #0c0c0c; /* Solid fallback */
             background: var(--glass-bg);
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(197, 160, 89, 0.12);
@@ -113,7 +115,8 @@
         .reader-header {
             padding: calc(var(--safe-top) + 10px) 20px 10px;
             display: flex; justify-content: space-between; align-items: center;
-            background: var(--glass-bg); backdrop-filter: blur(20px);
+            background: #0c0c0c; /* Solid fallback */
+            background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(197, 160, 89, 0.1);
         }
         .reader-body { flex-grow: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; align-items: center; }
@@ -161,7 +164,8 @@
         .tabs {
             position: fixed; bottom: 0; left: 0; right: 0;
             height: calc(80px + var(--safe-bottom));
-            background: var(--glass-bg); backdrop-filter: blur(30px);
+            background: #0c0c0c; /* Solid fallback */
+            background: var(--glass-bg); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
             border-top: 1px solid rgba(197, 160, 89, 0.2);
             display: flex; justify-content: space-around; padding-top: 15px; z-index: 100;
         }
@@ -246,7 +250,7 @@
             <div style="width:40px"></div>
         </div>
         <div class="reader-body" id="reader-container"></div>
-        <div style="display:flex;justify-content:space-between;padding:15px;background:var(--glass-bg);backdrop-filter:blur(20px)">
+        <div style="display:flex;justify-content:space-between;padding:15px;background:#0c0c0c;background:var(--glass-bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)">
             <button onclick="navPage(1)" class="cat-button" style="padding:10px 25px">السابق</button>
             <button onclick="navPage(-1)" class="cat-button" style="padding:10px 25px">التالي</button>
         </div>
@@ -313,9 +317,10 @@
             document.getElementById('index-content').innerHTML = html;
         }
 
-        function renderJuzIndex() {
+        function renderJuzIndex(q = '') {
             let html = '';
             for(let i=1; i<=30; i++) {
+                if (q && !String(i).includes(q)) continue;
                 html += `
                 <div class="index-item" onclick="openPageByJuz(${i})">
                     <div class="surah-num">${i}</div>
@@ -325,9 +330,10 @@
             document.getElementById('index-content').innerHTML = html;
         }
 
-        function renderPageIndex() {
+        function renderPageIndex(q = '') {
             let html = '';
             for(let i=1; i<=604; i++) {
+                if (q && !String(i).includes(q)) continue;
                 html += `
                 <div class="index-item" onclick="openPage(${i})">
                     <div class="surah-num">${i}</div>
@@ -338,9 +344,14 @@
         }
 
         function filterIndex(q) {
-            if (currentView !== 'surah') return;
-            const filtered = surahs.filter(s => s.name.includes(q) || s.englishName.toLowerCase().includes(q.toLowerCase()));
-            renderSurahIndex(filtered);
+            if (currentView === 'surah') {
+                const filtered = surahs.filter(s => s.name.includes(q) || s.englishName.toLowerCase().includes(q.toLowerCase()));
+                renderSurahIndex(filtered);
+            } else if (currentView === 'juz') {
+                renderJuzIndex(q);
+            } else if (currentView === 'page') {
+                renderPageIndex(q);
+            }
         }
 
         async function openSurah(num, name) {
